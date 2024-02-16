@@ -1,0 +1,26 @@
+{
+  "manifest_version": 3,
+  "name": "GPT-Tunnel",
+  "version": "1.0",
+  "description": "Start a conversation with ChatGPT from a separate webpage, using the local webpage context.",
+  "permissions": ["activeTab", "scripting"],
+  "host_permissions": ["https://chat.openai.com/*"],
+  "content_scripts": [
+    {
+      "matches": ["<all_urls>"],
+      "js": ["contentScript.bundle.js"]
+    }
+  ],
+  "background": {
+    "service_worker": "backgroundScript.bundle.js"
+  },
+  "commands": {
+    "open_chatgpt": {
+      "suggested_key": {
+        "default": "Ctrl+Shift+X",
+        "mac": "Command+Shift+X"
+      },
+      "description": "Open ChatGPT and automatically have the highlighted context explained."
+    }
+  }
+}
