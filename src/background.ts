@@ -28,14 +28,17 @@ function setInputAndSubmit(highlight: string, articleContext: string) {
   const textarea = document.querySelector(
     "#prompt-textarea"
   ) as HTMLTextAreaElement
+  // Needs work
   const instructions =
-    "Concisely explain my highlighted text in the broader article context."
+    "Concisely explain my highlighted text in the broader article context. If it's a small term, like a proper noun, concisely expand on its meaning and include relevant facts."
 
   if (textarea) {
-    const prompt = `${instructions}
+    const prompt = `
 ARTICLE CONTEXT: ${articleContext}
 
-USER HIGHLIGHT: ${highlight}`
+USER HIGHLIGHT: ${highlight}
+
+INSTRUCTIONS: ${instructions}`
 
     textarea.value = prompt
     textarea.dispatchEvent(new Event("input", { bubbles: true }))
