@@ -7,6 +7,15 @@ export function collectPrecedingText(startNode: Node): string {
     if (node.nodeType === Node.TEXT_NODE) {
       const newContent = (node.textContent || "").replace(/[\s]+/g, " ")
       text = newContent + text
+
+      // Add a newline for the end of a paragraph
+      if (
+        node.parentNode &&
+        node.parentNode.nodeName === "P" &&
+        node.parentNode.lastChild === node
+      ) {
+        text = "\n" + text
+      }
     } else if (node.nodeType === Node.ELEMENT_NODE && node.nodeName === "BR") {
       text = "\n" + text
     } else {
