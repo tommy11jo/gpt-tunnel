@@ -1,3 +1,4 @@
+import { renderChatBox } from "./ChatBox"
 import { collectPrecedingText } from "./dom-parser"
 
 document.addEventListener("keydown", (event) => {
@@ -7,16 +8,15 @@ document.addEventListener("keydown", (event) => {
     event.code === "KeyX"
   ) {
     const selection = window.getSelection()
-    if (selection) {
-      const selString = selection.toString().trim()
+    if (selection !== null) {
+      const selString = selection?.toString().trim()
       const range = selection.getRangeAt(0)
       let startNode = range.startContainer
       const articleContext = collectPrecedingText(startNode)
-      //   console.log("context", articleContext)
-      chrome.runtime.sendMessage({
-        highlight: selString,
-        articleContext: articleContext,
-      })
+      renderChatBox(selString, articleContext)
+    } else {
+      // probably use readibility here to get main text
+      renderChatBox()
     }
   }
 })

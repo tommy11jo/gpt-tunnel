@@ -1,5 +1,5 @@
 chrome.runtime.onMessage.addListener((message, sender, sendResponse) => {
-  if (message.highlight && message.articleContext) {
+  if (message.name === "tunnel") {
     chrome.tabs.create(
       {
         url: `https://chat.openai.com`,
@@ -9,37 +9,49 @@ chrome.runtime.onMessage.addListener((message, sender, sendResponse) => {
           chrome.tabs.get(tabId, (tab) => {
             if (tab.status === "complete") {
               chrome.scripting.executeScript({
-                target: { tabId: tab.id },
+                target: { tabId: tab.id! },
                 func: setInputAndSubmit,
-                args: [message.highlight, message.articleContext],
+                args: [
+                  message.highlight,
+                  message.articleContext,
+                  message.input,
+                ],
               })
             } else {
               setTimeout(() => checkTabReady(tabId), 100)
             }
           })
         }
-        checkTabReady(newTab.id)
+        checkTabReady(newTab.id!)
       }
     )
   }
 })
 
-function setInputAndSubmit(highlight: string, articleContext: string) {
+function setInputAndSubmit(
+  highlight: string,
+  articleContext: string,
+  input: string
+) {
   const textarea = document.querySelector(
     "#prompt-textarea"
   ) as HTMLTextAreaElement
-  // Needs work
-  const instructions =
-    "Concisely explain my highlighted text in the broader article context. If it's a small term, like a proper noun, concisely expand on its meaning and include relevant facts."
 
   if (textarea) {
-    const prompt = `
+    let prompt = ""
+    if (highlight) {
+      prompt = `
 ARTICLE CONTEXT: ${articleContext}
 
 USER HIGHLIGHT: ${highlight}
 
-INSTRUCTIONS: ${instructions}`
-
+PROMPT: ${input}`
+    } else {
+      prompt = `
+        ARTICLE CONTEXT: ${articleContext}
+        
+        PROMPT: ${input}`
+    }
     textarea.value = prompt
     textarea.dispatchEvent(new Event("input", { bubbles: true }))
   } else {
