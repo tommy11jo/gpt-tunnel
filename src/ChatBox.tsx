@@ -1,5 +1,6 @@
 import React, { useRef, useState, useEffect } from "react"
 import { createRoot } from "react-dom/client"
+import actions, { Action } from "./action"
 type ChatBoxProps = {
   highlight?: string
   articleContext?: string
@@ -10,6 +11,10 @@ const ChatBox: React.FC<ChatBoxProps> = ({ highlight, articleContext }) => {
 
   const textAreaRef = useRef<HTMLTextAreaElement>(null)
   const modalRef = useRef<HTMLDivElement>(null)
+
+  const [curAction, setCurAction] = useState<Action | null>(null)
+  const [showActionMenu, setShowActionMenu] = useState(true)
+  const [showTextArea, setShowTextArea] = useState(false)
 
   useEffect(() => {
     if (textAreaRef.current) {
@@ -34,25 +39,51 @@ const ChatBox: React.FC<ChatBoxProps> = ({ highlight, articleContext }) => {
     }
   }, [isVisible])
 
-  function handleSend(input: string) {
-    const instructions =
-      input ||
-      "Concisely explain my highlighted text in the broader article context. If it's a small term, like a proper noun, concisely expand on its meaning and include relevant facts."
-    chrome.runtime.sendMessage({
-      highlight: highlight,
-      articleContext: articleContext,
-      input: instructions,
-      name: "tunnel",
-    })
+  const actionKeyListener = (event: KeyboardEvent) => {
+    const action = actions.find((action) => event.code === action.key)
+    if (action) {
+      triggerAction(action)
+    }
   }
+  useEffect(() => {
+    if (showActionMenu) {
+      document.addEventListener("keydown", actionKeyListener)
+    } else {
+      document.removeEventListener("keydown", actionKeyListener)
+    }
+    return () => {
+      document.removeEventListener("keydown", actionKeyListener)
+    }
+  }, [showActionMenu])
+
+  function triggerAction(action: Action) {
+    setCurAction(action)
+    if (action.allowInput) {
+      setShowTextArea(true)
+      setTimeout(() => {
+        if (textAreaRef.current) textAreaRef.current.focus()
+        else throw new Error("textarea ref should be present")
+      }, 0)
+      setShowActionMenu(false)
+    } else {
+      // TODO: make this mandatory, not optional
+      action.handler(articleContext || "", highlight)
+      setIsVisible(false)
+    }
+  }
+
   async function handleKeyDown(
     event: React.KeyboardEvent<HTMLTextAreaElement>
   ) {
     if (event.key === "Enter") {
       if (event.shiftKey) return
       event.preventDefault()
-      handleSend(input)
-      setInput("")
+      if (!curAction)
+        throw new Error(
+          "Cur action should not be null when action initiated with ENTER"
+        )
+      // TODO
+      curAction.handler(articleContext || "", highlight, input)
       setIsVisible(false)
     } else if (event.key === "Escape") {
       setIsVisible(false)
@@ -90,11 +121,8 @@ const ChatBox: React.FC<ChatBoxProps> = ({ highlight, articleContext }) => {
   const textAreaStyle = {
     width: "100%",
     padding: "8px",
-    // border: "1px solid #e0e0e0",
     border: "none",
     outline: "none",
-    // backgroundColor: "rgba(10, 10, 10, 0.5)",
-
     backgroundColor: "#222",
     borderRadius: "4px",
     resize: "none",
@@ -103,6 +131,26 @@ const ChatBox: React.FC<ChatBoxProps> = ({ highlight, articleContext }) => {
     lineHeight: "1.5",
     overflow: "hidden",
     color: "#fff",
+  }
+
+  const buttonStyle = {
+    padding: "8px 16px",
+    margin: "0 8px",
+    backgroundColor: "#4CAF50",
+    color: "white",
+    border: "none",
+    borderRadius: "4px",
+    cursor: "pointer",
+    outline: "none",
+    fontSize: "14px",
+    transition: "background-color 0.3s ease",
+  }
+
+  const buttonContainerStyle = {
+    display: "flex",
+    justifyContent: "center",
+    alignItems: "center",
+    padding: "16px 0",
   }
 
   return (
@@ -116,16 +164,31 @@ const ChatBox: React.FC<ChatBoxProps> = ({ highlight, articleContext }) => {
         >
           GPT Tunnel
         </div>
-        <textarea
-          style={textAreaStyle}
-          ref={textAreaRef}
-          rows={1}
-          placeholder="Send text here"
-          spellCheck={false}
-          onKeyDown={handleKeyDown}
-          onChange={handleInputChange}
-          value={input}
-        ></textarea>
+        {showTextArea && (
+          <textarea
+            style={textAreaStyle}
+            ref={textAreaRef}
+            rows={1}
+            placeholder="Send text here"
+            spellCheck={false}
+            onKeyDown={handleKeyDown}
+            onChange={handleInputChange}
+            value={input}
+          ></textarea>
+        )}
+        {showActionMenu && (
+          <div style={buttonContainerStyle}>
+            {actions.map((action, index) => (
+              <button
+                key={index}
+                style={buttonStyle}
+                onClick={() => triggerAction(action)}
+              >
+                {action.label}
+              </button>
+            ))}
+          </div>
+        )}
       </div>
     )
   )

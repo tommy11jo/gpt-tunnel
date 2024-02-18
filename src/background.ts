@@ -2,8 +2,6 @@ chrome.runtime.onMessage.addListener((message, sender, sendResponse) => {
   if (message.name === "tunnel") {
     chrome.system.display.getInfo((displays) => {
       if (displays.length > 0) {
-        const { workArea } =
-          displays.find((display) => display.isPrimary) || displays[0]
         const { width, height } = displays[0].bounds
         const windowWidth = Math.floor(width / 2)
         const windowHeight = height
@@ -28,11 +26,7 @@ chrome.runtime.onMessage.addListener((message, sender, sendResponse) => {
                   chrome.scripting.executeScript({
                     target: { tabId: tab.id! },
                     func: setInputAndSubmit,
-                    args: [
-                      message.highlight,
-                      message.articleContext,
-                      message.input,
-                    ],
+                    args: [message.prompt],
                   })
                 } else {
                   setTimeout(() => checkTabReady(tabId), 100)
@@ -47,30 +41,12 @@ chrome.runtime.onMessage.addListener((message, sender, sendResponse) => {
   }
 })
 
-function setInputAndSubmit(
-  highlight: string,
-  articleContext: string,
-  input: string
-) {
+function setInputAndSubmit(prompt: string) {
   const textarea = document.querySelector(
     "#prompt-textarea"
   ) as HTMLTextAreaElement
 
   if (textarea) {
-    let prompt = ""
-    if (highlight) {
-      prompt = `
-ARTICLE CONTEXT: ${articleContext}
-
-USER HIGHLIGHT: ${highlight}
-
-PROMPT: ${input}`
-    } else {
-      prompt = `
-ARTICLE CONTEXT: ${articleContext}
-        
-PROMPT: ${input}`
-    }
     textarea.value = prompt
     textarea.dispatchEvent(new Event("input", { bubbles: true }))
   } else {
@@ -95,5 +71,5 @@ PROMPT: ${input}`
     } else {
       throw new Error("Send button not found")
     }
-  }, 200)
+  }, 250)
 }
