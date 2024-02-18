@@ -95,8 +95,7 @@ const ChatBox: React.FC<ChatBoxProps> = ({ highlight, articleContext }) => {
     outline: "none",
     // backgroundColor: "rgba(10, 10, 10, 0.5)",
 
-    backgroundColor: "#000",
-    // backdropFilter: "blur(10px)",
+    backgroundColor: "#222",
     borderRadius: "4px",
     resize: "none",
     boxSizing: "border-box",
@@ -141,11 +140,7 @@ export async function renderChatBox(
   const hostDiv = document.createElement("div")
   document.body.appendChild(hostDiv)
 
-  const shadowRoot = hostDiv.attachShadow({ mode: "open" })
-  const styleSlot = document.createElement("section")
-  shadowRoot.appendChild(styleSlot)
-
-  const root = createRoot(shadowRoot)
+  const root = createRoot(hostDiv)
 
   root.render(<ChatBox highlight={highlight} articleContext={articleContext} />)
 }
