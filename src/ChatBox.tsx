@@ -75,26 +75,35 @@ const ChatBox: React.FC<ChatBoxProps> = ({ highlight, articleContext }) => {
     top: "50%",
     left: "50%",
     transform: "translate(-50%, -50%)",
-    backgroundColor: "#fff",
-    border: "1px solid #e0e0e0",
+    backgroundColor: "rgba(20, 20, 20, 0.7)",
+    backdropFilter: "blur(10px)",
+    // border: "1px solid #e0e0e0",
     borderRadius: "8px",
     boxShadow: "0 4px 6px rgba(0, 0, 0, 0.1)",
     padding: "16px",
     maxWidth: "480px",
     width: "100%",
     boxSizing: "border-box",
+    color: "#fff",
   }
 
   const textAreaStyle = {
     width: "100%",
     padding: "8px",
-    border: "1px solid #e0e0e0",
+    // border: "1px solid #e0e0e0",
+    border: "none",
+    outline: "none",
+    // backgroundColor: "rgba(10, 10, 10, 0.5)",
+
+    backgroundColor: "#000",
+    // backdropFilter: "blur(10px)",
     borderRadius: "4px",
     resize: "none",
     boxSizing: "border-box",
     fontSize: "14px",
     lineHeight: "1.5",
     overflow: "hidden",
+    color: "#fff",
   }
 
   return (
