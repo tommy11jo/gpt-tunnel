@@ -2,10 +2,11 @@ import React, { useRef, useState, useEffect } from "react"
 import { createRoot } from "react-dom/client"
 import actions, { Action, PromptContext } from "./action"
 import "./ChatBox.css"
+import { closeChatBox } from "./index"
 
 type ChatBoxProps = {
   highlight?: string
-  articleContext?: string
+  articleContext: string
 }
 const ChatBox: React.FC<ChatBoxProps> = ({ highlight, articleContext }) => {
   const [input, setInput] = useState("")
@@ -41,6 +42,12 @@ const ChatBox: React.FC<ChatBoxProps> = ({ highlight, articleContext }) => {
     }
   }, [isVisible])
 
+  useEffect(() => {
+    if (!isVisible) {
+      closeChatBox()
+    }
+  }, [isVisible])
+
   const actionKeyListener = (event: KeyboardEvent) => {
     const action = actions.find((action) => event.code === action.key)
     if (action) {
@@ -68,8 +75,7 @@ const ChatBox: React.FC<ChatBoxProps> = ({ highlight, articleContext }) => {
       }, 0)
       setShowActionMenu(false)
     } else {
-      // TODO: make this mandatory, not optional
-      action.handler(articleContext || "", highlight)
+      action.handler(articleContext, highlight)
       setIsVisible(false)
     }
   }
@@ -84,8 +90,7 @@ const ChatBox: React.FC<ChatBoxProps> = ({ highlight, articleContext }) => {
         throw new Error(
           "Cur action should not be null when action initiated with ENTER"
         )
-      // TODO
-      curAction.handler(articleContext || "", highlight, input)
+      curAction.handler(articleContext, highlight, input)
       setIsVisible(false)
     } else if (event.key === "Escape") {
       setIsVisible(false)
@@ -107,7 +112,8 @@ const ChatBox: React.FC<ChatBoxProps> = ({ highlight, articleContext }) => {
     (action) =>
       (action.promptContexts.includes(PromptContext.HighlightContext) &&
         highlight) ||
-      (PromptContext.ArticleContext && !highlight)
+      (action.promptContexts.includes(PromptContext.ArticleContext) &&
+        !highlight)
   )
   return (
     isVisible && (
@@ -163,8 +169,8 @@ const ChatBox: React.FC<ChatBoxProps> = ({ highlight, articleContext }) => {
 export default ChatBox
 
 export async function renderChatBox(
-  highlight?: string,
-  articleContext?: string
+  articleContext: string,
+  highlight?: string
 ) {
   const hostDiv = document.createElement("div")
   document.body.appendChild(hostDiv)

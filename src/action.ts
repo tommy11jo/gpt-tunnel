@@ -68,7 +68,7 @@ function stylizeHandler(
   highlight?: string,
   input?: string
 ) {
-  const prompt = `Stylize the TEXT according to the STYLE DESCRIPTION. Keep the content unchanged.
+  const prompt = `Stylize the TEXT according to the STYLE DESCRIPTION. Keep the content unchanged. Output the text directly.
 TEXT: ${highlight}
 STYLE DESCRIPTION: ${input}`
   chrome.runtime.sendMessage({
@@ -82,7 +82,13 @@ function keyPointsHandler(
   highlight?: string,
   input?: string
 ) {
-  throw new Error("not implemented")
+  const prompt = `Summarize the text in 3-5 key points. Reference concrete examples and be concise and casual, like texting. Act like every word costs you.
+    Text: ${articleText}
+`
+  chrome.runtime.sendMessage({
+    prompt: prompt,
+    name: "tunnel",
+  })
 }
 
 const chat: Action = {

@@ -7,7 +7,7 @@ chrome.runtime.onMessage.addListener((message, sender, sendResponse) => {
         const windowHeight = height
         const windowLeft = Math.floor(width / 2)
 
-        // this works in chrome but not in arc
+        // split screen works in chrome but not in arc
         chrome.windows.create(
           {
             url: `https://chat.openai.com`,
