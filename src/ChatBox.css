@@ -1,0 +1,72 @@
+/* ChatBox.css */
+.chatbox-modal {
+  font-family: "Arial", "Helvetica", sans-serif;
+  font-size: 16px;
+  position: fixed;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  background-color: rgba(20, 20, 20, 0.7);
+  backdrop-filter: blur(10px);
+  border: 1px solid #888;
+  border-radius: 8px;
+  box-shadow: 0 8px 12px rgba(0, 0, 0, 0.3);
+  padding: 12px 3px;
+  max-width: 480px;
+  width: 100%;
+  box-sizing: border-box;
+  color: #fff;
+  z-index: 10000;
+}
+
+.chatbox-textarea {
+  font-family: inherit;
+  font-size: 14px;
+  width: 100%;
+  padding: 8px;
+  border: none;
+  outline: none;
+  background-color: #222;
+  border-radius: 4px;
+  resize: none;
+  box-sizing: border-box;
+  line-height: 1.5;
+  overflow: hidden;
+  color: #fff;
+}
+
+.chatbox-button {
+  padding: 10px 4px;
+  margin: 0;
+  background-color: transparent;
+  color: white;
+  border: none;
+  border-radius: 8px;
+  cursor: pointer;
+  outline: none;
+  flex: 1 1 auto;
+  min-width: 120px;
+}
+.chatbox-button-content {
+  display: flex;
+  justify-content: space-between;
+  font-family: inherit;
+  font-size: 14px;
+  margin: 0 4px;
+}
+.chatbox-button:hover {
+  background-color: rgba(150, 150, 150, 0.3);
+}
+
+.chatbox-button-container {
+  display: flex;
+  flex-direction: column;
+  align-items: stretch;
+  padding: 4px 0;
+}
+
+.hr-line {
+  border-top: "1px solid #888";
+  margin-top: 10px;
+  margin-bottom: 0;
+}

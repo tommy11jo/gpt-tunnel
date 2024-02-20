@@ -1,6 +1,8 @@
 import React, { useRef, useState, useEffect } from "react"
 import { createRoot } from "react-dom/client"
-import actions, { Action } from "./action"
+import actions, { Action, PromptContext } from "./action"
+import "./ChatBox.css"
+
 type ChatBoxProps = {
   highlight?: string
   articleContext?: string
@@ -101,61 +103,15 @@ const ChatBox: React.FC<ChatBoxProps> = ({ highlight, articleContext }) => {
     adjustTextAreaHeight()
   }
 
-  const style = {
-    position: "fixed",
-    top: "50%",
-    left: "50%",
-    transform: "translate(-50%, -50%)",
-    backgroundColor: "rgba(20, 20, 20, 0.7)",
-    backdropFilter: "blur(10px)",
-    // border: "1px solid #e0e0e0",
-    borderRadius: "8px",
-    boxShadow: "0 4px 6px rgba(0, 0, 0, 0.1)",
-    padding: "16px",
-    maxWidth: "480px",
-    width: "100%",
-    boxSizing: "border-box",
-    color: "#fff",
-  }
-
-  const textAreaStyle = {
-    width: "100%",
-    padding: "8px",
-    border: "none",
-    outline: "none",
-    backgroundColor: "#222",
-    borderRadius: "4px",
-    resize: "none",
-    boxSizing: "border-box",
-    fontSize: "14px",
-    lineHeight: "1.5",
-    overflow: "hidden",
-    color: "#fff",
-  }
-
-  const buttonStyle = {
-    padding: "8px 16px",
-    margin: "0 8px",
-    backgroundColor: "#4CAF50",
-    color: "white",
-    border: "none",
-    borderRadius: "4px",
-    cursor: "pointer",
-    outline: "none",
-    fontSize: "14px",
-    transition: "background-color 0.3s ease",
-  }
-
-  const buttonContainerStyle = {
-    display: "flex",
-    justifyContent: "center",
-    alignItems: "center",
-    padding: "16px 0",
-  }
-
+  const legalActions = actions.filter(
+    (action) =>
+      (action.promptContexts.includes(PromptContext.HighlightContext) &&
+        highlight) ||
+      (PromptContext.ArticleContext && !highlight)
+  )
   return (
     isVisible && (
-      <div style={style} ref={modalRef} className="chatbox-modal">
+      <div className="chatbox-modal" ref={modalRef}>
         <div
           style={{
             margin: "auto",
@@ -164,9 +120,10 @@ const ChatBox: React.FC<ChatBoxProps> = ({ highlight, articleContext }) => {
         >
           GPT Tunnel
         </div>
+        <hr className="hr-line" />
         {showTextArea && (
           <textarea
-            style={textAreaStyle}
+            className="chatbox-textarea"
             ref={textAreaRef}
             rows={1}
             placeholder="Send text here"
@@ -177,14 +134,23 @@ const ChatBox: React.FC<ChatBoxProps> = ({ highlight, articleContext }) => {
           ></textarea>
         )}
         {showActionMenu && (
-          <div style={buttonContainerStyle}>
-            {actions.map((action, index) => (
+          <div className="chatbox-button-container">
+            {legalActions.map((action, index) => (
               <button
                 key={index}
-                style={buttonStyle}
+                className="chatbox-button"
                 onClick={() => triggerAction(action)}
               >
-                {action.label}
+                <div className="chatbox-button-content">
+                  <div style={{ display: "flex", gap: "4px" }}>
+                    <span>{action.emoji}</span>
+                    <span>{action.label}</span>
+                  </div>
+                  <br />
+                  <span style={{ opacity: 0.7 }}>
+                    Press {action.key.substring(3)}
+                  </span>
+                </div>
               </button>
             ))}
           </div>

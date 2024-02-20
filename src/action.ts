@@ -4,11 +4,18 @@ export type ActionHandler = (
   input?: string
 ) => void
 
+export enum PromptContext {
+  ArticleContext = "ArticleContext",
+  HighlightContext = "HighlightContext",
+}
+
 export type Action = {
   name: string
   label: string
   key: string
   allowInput: boolean
+  promptContexts: PromptContext[] // contexts under which this Action is possible to run (during highlight or no highlight)
+  emoji: string
   handler: ActionHandler
 }
 
@@ -55,7 +62,22 @@ HIGHLIGHT: ${highlight}`
     name: "tunnel",
   })
 }
-function ytSummaryHandler(
+
+function stylizeHandler(
+  articleText: string,
+  highlight?: string,
+  input?: string
+) {
+  const prompt = `Stylize the TEXT according to the STYLE DESCRIPTION. Keep the content unchanged.
+TEXT: ${highlight}
+STYLE DESCRIPTION: ${input}`
+  chrome.runtime.sendMessage({
+    prompt: prompt,
+    name: "tunnel",
+  })
+}
+
+function keyPointsHandler(
   articleText: string,
   highlight?: string,
   input?: string
@@ -66,7 +88,12 @@ function ytSummaryHandler(
 const chat: Action = {
   name: "custom_chat",
   label: "Custom Chat",
+  emoji: "💬",
   key: "KeyC",
+  promptContexts: [
+    PromptContext.ArticleContext,
+    PromptContext.HighlightContext,
+  ],
   allowInput: true,
   handler: customChatHandler,
 }
@@ -74,17 +101,30 @@ const explain: Action = {
   name: "explain",
   label: "Explain",
   key: "KeyE",
+  emoji: "💡",
+  promptContexts: [PromptContext.HighlightContext],
   allowInput: false,
   handler: explainHandler,
 }
 
-const ytSummary: Action = {
-  name: "youtube_summary",
-  label: "YouTube Summary",
-  key: "KeyY",
+const keyPoints: Action = {
+  name: "key_points",
+  label: "Key Points",
+  key: "KeyK",
+  emoji: "🔑",
+  promptContexts: [PromptContext.ArticleContext],
   allowInput: false,
-  handler: ytSummaryHandler,
+  handler: keyPointsHandler,
 }
 
-const actions = [chat, explain, ytSummary]
+const stylize: Action = {
+  name: "stylize",
+  label: "Stylize",
+  emoji: "🎨",
+  key: "KeyS",
+  promptContexts: [PromptContext.HighlightContext],
+  allowInput: true,
+  handler: stylizeHandler,
+}
+const actions = [chat, explain, keyPoints, stylize]
 export default actions
