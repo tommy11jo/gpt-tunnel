@@ -14,6 +14,9 @@
   "background": {
     "service_worker": "backgroundScript.bundle.js"
   },
+  "action": {
+    "default_popup": "popup.html"
+  },
   "commands": {
     "open_chatgpt": {
       "suggested_key": {

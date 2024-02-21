@@ -168,10 +168,7 @@ const ChatBox: React.FC<ChatBoxProps> = ({ highlight, articleContext }) => {
 
 export default ChatBox
 
-export async function renderChatBox(
-  articleContext: string,
-  highlight?: string
-) {
+export function renderChatBox(articleContext: string, highlight?: string) {
   const hostDiv = document.createElement("div")
   document.body.appendChild(hostDiv)
 

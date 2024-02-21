@@ -1,4 +1,5 @@
 const path = require("path")
+const HtmlWebpackPlugin = require("html-webpack-plugin")
 const CopyWebpackPlugin = require("copy-webpack-plugin")
 
 module.exports = {
@@ -7,6 +8,7 @@ module.exports = {
   entry: {
     contentScript: "./src/index.ts",
     backgroundScript: "./src/background.ts",
+    popup: "./src/popup.tsx",
   },
   output: {
     filename: "[name].bundle.js",
@@ -15,32 +17,14 @@ module.exports = {
   module: {
     rules: [
       {
-        test: /\.(js|jsx)$/, // prepare for using react in popup for ext configuration
+        test: /\.(js|jsx|ts|tsx)$/,
         exclude: /node_modules/,
-        use: {
-          loader: "babel-loader",
-        },
-      },
-      {
-        test: /\.(ts|tsx)$/,
-        exclude: /node_modules/,
-        use: [
-          {
-            loader: "babel-loader",
-          },
-          {
-            loader: "ts-loader",
-          },
-        ],
+        use: ["babel-loader", "ts-loader"],
       },
       {
         test: /\.css$/,
         use: ["style-loader", "css-loader"],
       },
-      //   {
-      //     test: /\.css$/,
-      //     use: ["style-loader", "css-loader"],
-      //   },
     ],
   },
   resolve: {
@@ -49,6 +33,11 @@ module.exports = {
   plugins: [
     new CopyWebpackPlugin({
       patterns: [{ from: "./manifest.json", to: "./manifest.json" }],
+    }),
+    new HtmlWebpackPlugin({
+      filename: "popup.html",
+      template: "./src/popup.html",
+      chunks: ["popup"],
     }),
   ],
 }
