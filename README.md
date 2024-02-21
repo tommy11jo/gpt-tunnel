@@ -2,7 +2,7 @@
 
 ![Demo](./screenshot_demo.png)
 
-The main goal of this chrome extension is to lower the "activation energy" for a reader on the web to get questions answered by a chatbot. The extension presents several common actions like explaining the selected text or summarizing the key points. It carries out an action by navigating to chatgpt.com and automatically sending a message -- "tunneling" from the webpage you're reading on to the webpage where your chat is. So it's free for existing ChatGPT users.
+The main goal of this chrome extension is to lower the "activation energy" for a reader on the web to get questions answered by a chatbot. The extension presents several common actions like explaining the selected text or summarizing the key points. It carries out an action by opening a new window, navigating to chatgpt.com, and automatically sending a message -- "tunneling" from the webpage you're reading on to the webpage where your chat is. So it's free for existing ChatGPT users.
 
 ## Use:
 
