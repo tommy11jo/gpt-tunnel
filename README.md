@@ -21,16 +21,17 @@ If you do not select text to focus on, then the available actions are:
 - Custom Chat (Press C)
 - Key Points (Press K)
 
-Note: The new chat window opens on the right-half of your screen if you use the chrome browser. Works in chrome, not in Arc.
+## Notes
 
-A broader goal is to create an entrypoint to a chatting webpage from separate webpages, by exposing the most common, simple prompting patterns.
+- The new chat window opens on the right-half of your screen if you use the chrome browser. Works in chrome, not in Arc.
+- A broader goal is to create an entrypoint to a chatting webpage from separate webpages, by exposing the most common, simple prompting patterns.
 
 ## Developer Setup
 
-`npm install` to install relevant dependencies
-`npm run build` to build the chrome extension
-"Load unpacked" at chrome://extensions
-Command + Shift + X should trigger the palette to popup on any webpage
+- `npm install` to install relevant dependencies
+- `npm run build` to build the chrome extension
+- "Load unpacked" at chrome://extensions
+- Command + Shift + X should trigger the palette to popup on any webpage
 
 ## Next Steps:
 
