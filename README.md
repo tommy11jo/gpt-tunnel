@@ -6,7 +6,7 @@ The main goal of this chrome extension is to lower the "activation energy" for a
 
 Available [here](https://chromewebstore.google.com/detail/gpt-tunnel/dkelohhjcfbkjkgpmcnboojdonegbakl?hl=en&authuser=0) on the chrome web store
 
-## Use:
+## Use
 
 Press `Command + Shift + X` to open command palette.
 
@@ -33,7 +33,7 @@ If you do not select text to focus on, then the available actions are:
 - "Load unpacked" at chrome://extensions
 - Command + Shift + X should trigger the palette to popup on any webpage
 
-## Next Steps:
+## Next Steps
 
 - PDF Support (TODO)
 - Allow users to create their own actions? They could just specify a template and whether to allow input after selecting the custom action.
