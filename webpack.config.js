@@ -32,7 +32,10 @@ module.exports = {
   },
   plugins: [
     new CopyWebpackPlugin({
-      patterns: [{ from: "./manifest.json", to: "./manifest.json" }],
+      patterns: [
+        { from: "./manifest.json", to: "./manifest.json" },
+        { from: "**/*", to: ".", context: "public" },
+      ],
     }),
     new HtmlWebpackPlugin({
       filename: "popup.html",

@@ -1,0 +1,14 @@
+GPT-Tunnel provides common actions to help you read webpages. For example, you can select text and choose the "Explain" action to have the selected text explained in the broader context of the article. The extension opens up chatgpt.com so that you can get these actions for free, as a ChatGPT user.
+
+Press `Command + Shift + X` to open command palette.
+
+If you select text to focus on, then the available actions are:
+- Custom Chat (Press C)
+- Explain (Press E)
+- Stylize (Press S)
+
+If you do not select text to focus on, then the available actions are:
+- Custom Chat (Press C)
+- Key Points (Press K)
+
+Note: The new chat window opens on the right-half of your screen if you use the chrome browser.

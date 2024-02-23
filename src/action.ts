@@ -54,7 +54,7 @@ function explainHandler(
   if (!articleText || !highlight) {
     throw new Error("Invalid explain action args")
   }
-  const prompt = `Casually and concisely explain the text I'm highlighting in the context of the article I'm reading. Act like every word costs you.
+  const prompt = `Casually and concisely explain the text I'm highlighting in the context of the article I'm reading. Act like every word costs you. Do not repeat info clearly explained in the article text.
 ARTICLE: ${articleText}
 HIGHLIGHT: ${highlight}`
   chrome.runtime.sendMessage({
