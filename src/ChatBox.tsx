@@ -42,10 +42,19 @@ const ChatBox: React.FC<ChatBoxProps> = ({ highlight, articleContext }) => {
     }
   }, [isVisible])
 
+  function escapeHandler(event: KeyboardEvent) {
+    if (event.key === "Escape") {
+      setIsVisible(false)
+    }
+  }
   useEffect(() => {
     if (!isVisible) {
       closeChatBox()
+      document.removeEventListener("keydown", escapeHandler)
     }
+
+    document.addEventListener("keydown", escapeHandler)
+    return () => document.removeEventListener("keydown", escapeHandler)
   }, [isVisible])
 
   const actionKeyListener = (event: KeyboardEvent) => {
@@ -80,7 +89,7 @@ const ChatBox: React.FC<ChatBoxProps> = ({ highlight, articleContext }) => {
     }
   }
 
-  async function handleKeyDown(
+  async function keyDownTextAreaOpen(
     event: React.KeyboardEvent<HTMLTextAreaElement>
   ) {
     if (event.key === "Enter") {
@@ -91,8 +100,6 @@ const ChatBox: React.FC<ChatBoxProps> = ({ highlight, articleContext }) => {
           "Cur action should not be null when action initiated with ENTER"
         )
       curAction.handler(articleContext, highlight, input)
-      setIsVisible(false)
-    } else if (event.key === "Escape") {
       setIsVisible(false)
     }
   }
@@ -115,54 +122,53 @@ const ChatBox: React.FC<ChatBoxProps> = ({ highlight, articleContext }) => {
       (action.promptContexts.includes(PromptContext.ArticleContext) &&
         !highlight)
   )
+  if (!isVisible) return <></>
   return (
-    isVisible && (
-      <div className="chatbox-modal" ref={modalRef}>
-        <div
-          style={{
-            margin: "auto",
-            textAlign: "center",
-          }}
-        >
-          GPT Tunnel
-        </div>
-        <hr className="hr-line" />
-        {showTextArea && (
-          <textarea
-            className="chatbox-textarea"
-            ref={textAreaRef}
-            rows={1}
-            placeholder="Send text here"
-            spellCheck={false}
-            onKeyDown={handleKeyDown}
-            onChange={handleInputChange}
-            value={input}
-          ></textarea>
-        )}
-        {showActionMenu && (
-          <div className="chatbox-button-container">
-            {legalActions.map((action, index) => (
-              <button
-                key={index}
-                className="chatbox-button"
-                onClick={() => triggerAction(action)}
-              >
-                <div className="chatbox-button-content">
-                  <div style={{ display: "flex", gap: "4px" }}>
-                    <span>{action.emoji}</span>
-                    <span>{action.label}</span>
-                  </div>
-                  <br />
-                  <span style={{ opacity: 0.7 }}>
-                    Press {action.key.substring(3)}
-                  </span>
-                </div>
-              </button>
-            ))}
-          </div>
-        )}
+    <div className="chatbox-modal" ref={modalRef}>
+      <div
+        style={{
+          margin: "auto",
+          textAlign: "center",
+        }}
+      >
+        GPT Tunnel
       </div>
-    )
+      <hr className="hr-line" />
+      {showTextArea && (
+        <textarea
+          className="chatbox-textarea"
+          ref={textAreaRef}
+          rows={1}
+          placeholder="Send text here"
+          spellCheck={false}
+          onKeyDown={keyDownTextAreaOpen}
+          onChange={handleInputChange}
+          value={input}
+        ></textarea>
+      )}
+      {showActionMenu && (
+        <div className="chatbox-button-container">
+          {legalActions.map((action, index) => (
+            <button
+              key={index}
+              className="chatbox-button"
+              onClick={() => triggerAction(action)}
+            >
+              <div className="chatbox-button-content">
+                <div style={{ display: "flex", gap: "4px" }}>
+                  <span>{action.emoji}</span>
+                  <span>{action.label}</span>
+                </div>
+                <br />
+                <span style={{ opacity: 0.7 }}>
+                  Press {action.key.substring(3)}
+                </span>
+              </div>
+            </button>
+          ))}
+        </div>
+      )}
+    </div>
   )
 }
 
