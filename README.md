@@ -24,6 +24,7 @@ If you do not select text to focus on, then the available actions are:
 ## Notes
 
 - The new chat window opens on the right-half of your screen if you use the chrome browser. Works in chrome, not in Arc.
+- This extension requests permission to "Read and Change all your data on all websites". This is necessary because it has to read the DOM to gather the local context when you trigger an action.
 - A broader goal is to create an entrypoint to a chatting webpage from separate webpages, by exposing the most common, simple prompting patterns.
 
 ## Developer Setup
