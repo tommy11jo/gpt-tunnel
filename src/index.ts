@@ -1,4 +1,5 @@
 import { renderChatBox } from "./ChatBox"
+import { loadCmdConfig } from "./SetupModal"
 import { collectPrecedingText } from "./dom-parser"
 import { Readability } from "@mozilla/readability"
 
@@ -7,11 +8,16 @@ let isChatBoxOpen = false
 export function closeChatBox() {
   isChatBoxOpen = false
 }
-document.addEventListener("keydown", (event) => {
+
+let cmdConfig: Record<string, any> | null = null
+document.addEventListener("keydown", async (event) => {
+  if (cmdConfig == null) cmdConfig = await loadCmdConfig()
   if (
-    (event.ctrlKey || event.metaKey) &&
-    event.shiftKey &&
-    event.code === "KeyX"
+    event.key == cmdConfig["key"] &&
+    event.ctrlKey == cmdConfig["ctrl"] &&
+    event.metaKey == cmdConfig["meta"] &&
+    event.shiftKey == cmdConfig["shift"] &&
+    event.altKey == cmdConfig["alt"]
   ) {
     if (isChatBoxOpen) return
     const selection = window.getSelection()

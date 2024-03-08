@@ -8,7 +8,7 @@ Available [here](https://chromewebstore.google.com/detail/gpt-tunnel/dkelohhjcfb
 
 ## Use
 
-Press `Command + Shift + X` to open command palette.
+Press `Command + Shift + X` to open command palette in mac. `Win + Shift + X` for windows. You can customize this in the extension popup.
 
 If you select text to focus on, then the available actions are:
 
